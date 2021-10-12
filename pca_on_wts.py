@@ -7,7 +7,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 model = OurCNN()
 cwd = os.getcwd()
+
 num_epoch = 5
+
 last_fc = torch.zeros((num_epoch, 400))
 
 for epoch in range(1,num_epoch+1):
@@ -21,17 +23,21 @@ for epoch in range(1,num_epoch+1):
 u,s,v = torch.pca_lowrank(last_fc)
 pca_wt = torch.matmul(last_fc, v[:, :2]).detach().numpy()
 print(pca_wt.shape)
-# pdb.set_trace()
 
+x = pca_wt[:,0]
+y = pca_wt[:,1]
+print(x,"\n",y)
 
+u = np.diff(x)
+v = np.diff(y)
+pos_x = x[:-1] + u/2
+pos_y = y[:-1] + v/2
+norm = np.sqrt(u**2+v**2) 
 
 plt.figure(figsize=(6,6))
-plt.scatter(pca_wt[:,0],pca_wt[:,1], s=5, label=(f"x, y"))
+plt.plot(x, y, marker="o", label=(f"x, y"))
+plt.quiver(pos_x, pos_y, u/norm, v/norm, angles="xy", zorder=5, pivot="mid")
 plt.title(f"PCA MNIST")
-# plt.xlim(-5,5)
-# plt.ylim(-5,5)
-# plt.xticks(range(-5,6))
-# plt.yticks(range(-5,6))
 plt.xlabel("x-axis")
 plt.ylabel("y-axis")
 plt.grid()

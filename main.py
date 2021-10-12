@@ -62,5 +62,5 @@ for epoch in range(1, max_epoch+1):
     train(classifier, epoch, train_loader, optimizer, verbose = False)
     test(classifier, epoch, test_loader, optimizer)
 
-    PATH = f"{cwd}/model_wts/{device}_net2_batch4_{epoch}.pth" 
+    PATH = f"{cwd}/model_wts/{device}_net2_batch{batch_size_train}_{epoch}.pth" 
     torch.save(classifier.state_dict(), PATH)
