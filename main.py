@@ -28,7 +28,7 @@ test_dataset = torchvision.datasets.MNIST(cwd+'/data', train=False, download=Tru
 
 # print(train_dataset)
 
-batch_size_train, batch_size_test = 1, 1000
+batch_size_train, batch_size_test = 4, 1000
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size_test, shuffle=False)
@@ -62,5 +62,5 @@ for epoch in range(1, max_epoch+1):
     train(classifier, epoch, train_loader, optimizer, verbose = False)
     test(classifier, epoch, test_loader, optimizer)
 
-    PATH = f"{cwd}/model_wts/net2_batch1_{epoch}.pth" 
+    PATH = f"{cwd}/model_wts/{device}_net2_batch4_{epoch}.pth" 
     torch.save(classifier.state_dict(), PATH)
