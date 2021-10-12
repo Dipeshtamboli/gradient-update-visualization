@@ -28,7 +28,7 @@ test_dataset = torchvision.datasets.MNIST(cwd+'/data', train=False, download=Tru
 
 # print(train_dataset)
 
-batch_size_train, batch_size_test = 64, 1000
+batch_size_train, batch_size_test = 1, 1000
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size_test, shuffle=False)
@@ -39,13 +39,13 @@ print(f'images has shape {images.size()}')
 print(f'targets has shape {targets.size()}')
 
 
-fig, ax = plt.subplots(3,3)
-fig.set_size_inches(12,12)
-for i in range(3):
-  for j in range(3):
-    ax[i,j].imshow(images[i*3+j][0], cmap='gray')
-    ax[i,j].set_title(f'label {targets[i*3+j]}')
-fig.savefig("mnist.jpg")
+# fig, ax = plt.subplots(3,3)
+# fig.set_size_inches(12,12)
+# for i in range(3):
+#   for j in range(3):
+#     ax[i,j].imshow(images[i*3+j][0], cmap='gray')
+#     ax[i,j].set_title(f'label {targets[i*3+j]}')
+# fig.savefig("mnist.jpg")
 
 
 
@@ -55,12 +55,12 @@ optimizer = optim.SGD(classifier.parameters(), lr=0.01, momentum=0.8)
 
 import torch.optim as optim
 
-max_epoch = 1
+max_epoch = 5
 
 classifier = classifier.to(device)
 for epoch in range(1, max_epoch+1):
-    train(classifier, epoch, train_loader, optimizer)
+    train(classifier, epoch, train_loader, optimizer, verbose = False)
     test(classifier, epoch, test_loader, optimizer)
 
-PATH = f"{cwd}/model_wts/mnist_wts.pth" 
-torch.save(classifier.state_dict(), PATH)
+    PATH = f"{cwd}/model_wts/net2_batch1_{epoch}.pth" 
+    torch.save(classifier.state_dict(), PATH)
