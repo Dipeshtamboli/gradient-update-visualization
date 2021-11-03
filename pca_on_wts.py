@@ -5,20 +5,22 @@ import pdb
 import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
-model = OurCNN()
+from net_fc import onlyFC
+# model = OurCNN()
+model = onlyFC()
 cwd = os.getcwd()
 
 num_epoch = 5
 
-last_fc = torch.zeros((num_epoch, 400))
+last_fc = torch.zeros((num_epoch, 1120))
 
 for epoch in range(1,num_epoch+1):
-    wts_model = f"{cwd}/model_wts/cuda_net2_batch4_{epoch}.pth" 
+    wts_model = f"{cwd}/fc_wts/cuda_net2_batch4_{epoch}.pth" 
     model.load_state_dict(torch.load(wts_model))
     grad_list = []
     grad_list.append([x for x in model.parameters() if x.requires_grad != 'null'])
-    
-    last_fc[epoch-1] = torch.reshape(grad_list[0][4], (1,-1))
+    # pdb.set_trace()
+    last_fc[epoch-1] = torch.reshape(grad_list[0][2], (1,-1))
 
 u,s,v = torch.pca_lowrank(last_fc)
 pca_wt = torch.matmul(last_fc, v[:, :2]).detach().numpy()
@@ -42,4 +44,4 @@ plt.xlabel("x-axis")
 plt.ylabel("y-axis")
 plt.grid()
 plt.legend()
-plt.savefig("pca.jpg")
+plt.savefig("pca_fc.jpg")

@@ -8,13 +8,8 @@ import torch
 import torchvision
 
 from net import OurCNN
+from net_fc import onlyFC
 from train_test import *
-"""
-Here the transform is a pipeline containing two seperate transforms: 
-1. Transform the data into tensor type
-2. Normalize the dataset by a giving mean and std. 
-  (Those number is given as the global mean and standard deviation of MNIST dataset)
-"""
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 # pdb.set_trace()
@@ -26,17 +21,15 @@ cwd = os.getcwd()
 train_dataset = torchvision.datasets.MNIST(cwd+'/data', train=True, download=True, transform=transform)
 test_dataset = torchvision.datasets.MNIST(cwd+'/data', train=False, download=True, transform=transform)
 
-# print(train_dataset)
-
 batch_size_train, batch_size_test = 4, 1000
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size_test, shuffle=False)
 
 batch_idx, (images, targets) = next(enumerate(train_loader))
-print(f'current batch index is {batch_idx}')
-print(f'images has shape {images.size()}')
-print(f'targets has shape {targets.size()}')
+# print(f'current batch index is {batch_idx}')
+# print(f'images has shape {images.size()}')
+# print(f'targets has shape {targets.size()}')
 
 
 # fig, ax = plt.subplots(3,3)
@@ -50,7 +43,8 @@ print(f'targets has shape {targets.size()}')
 
 
 
-classifier = OurCNN()
+# classifier = OurCNN()
+classifier = onlyFC()
 optimizer = optim.SGD(classifier.parameters(), lr=0.01, momentum=0.8)
 
 import torch.optim as optim
@@ -62,5 +56,5 @@ for epoch in range(1, max_epoch+1):
     train(classifier, epoch, train_loader, optimizer, verbose = False)
     test(classifier, epoch, test_loader, optimizer)
 
-    PATH = f"{cwd}/model_wts/{device}_net2_batch{batch_size_train}_{epoch}.pth" 
+    PATH = f"{cwd}/fc_wts/{device}_net2_batch{batch_size_train}_{epoch}.pth" 
     torch.save(classifier.state_dict(), PATH)
